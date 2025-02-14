@@ -26,23 +26,19 @@ This project is a final assignment for the **Advanced Databases (NoSQL)** course
 ### Steps to Run the Project
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo-url.git
-   cd your-repo-folder
+   git clone (https://github.com/nurekeeenti/Final-Advanced-OS.git
    ```
 2. Install dependencies:
    ```sh
    go mod tidy
    ```
 3. Start the MongoDB database.
-4. Update database connection details in `db.go`:
-   ```go
-   clientOptions := options.Client().ApplyURI("your-mongodb-connection-string")
-   ```
-5. Run the server:
+
+4. Run the server:
    ```sh
    go run main.go
    ```
-6. Open a browser and visit `http://localhost:8080`
+5. Open a browser and visit `http://localhost:8080`
 
 ## API Endpoints
 ### Authentication
