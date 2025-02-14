@@ -79,7 +79,8 @@ project-folder/
 - **Improved UI:** Enhance the user experience with a modern design.
 
 ## Contributors
-- **Your Name** - Developer
+Nursultan Zhumagali
+Aldiyar Kuandyk
 
 ## License
 This project is open-source and available under the **MIT License**.
