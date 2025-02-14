@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход в систему</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Вход в систему</h1>
+        <form id="login-form">
+            <input type="email" id="email" placeholder="Email" required><br>
+            <input type="password" id="password" placeholder="Пароль" required><br>
+            <button type="submit">Войти</button>
+        </form>
+        <button id="show-register">Создать аккаунт</button>
+        <div id="error-message" class="error"></div>
+
+        <div id="register-form" style="display:none;">
+            <h2>Регистрация</h2>
+            <input type="text" id="reg-name" placeholder="Имя" required><br>
+            <input type="email" id="reg-email" placeholder="Email" required><br>
+            <input type="password" id="reg-password" placeholder="Пароль" required><br>
+            <button id="register-btn">Отправить код на почту</button>
+
+            <div id="verification-section" style="display:none;">
+                <input type="text" id="verification-code" placeholder="Код подтверждения" required><br>
+                <button id="verify-btn">Подтвердить</button>
+            </div>
+
+            <div id="register-message" class="error"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    window.location.href = '/dashboard';
+                } else {
+                    document.getElementById('error-message').textContent = data.error;
+                }
+            } catch (error) {
+                document.getElementById('error-message').textContent = 'Ошибка подключения к серверу';
+            }
+        });
+
+        document.getElementById('show-register').addEventListener('click', () => {
+            document.getElementById('register-form').style.display = 'block';
+        });
+
+        document.getElementById('register-btn').addEventListener('click', async () => {
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('verification-section').style.display = 'block';
+                } else {
+                    document.getElementById('register-message').textContent = data.error;
+                }
+            } catch (error) {
+                document.getElementById('register-message').textContent = 'Ошибка отправки кода';
+            }
+        });
+
+        document.getElementById('verify-btn').addEventListener('click', async () => {
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const code = document.getElementById('verification-code').value;
+
+            try {
+                const response = await fetch('/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password, code })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('register-message').textContent = 'Аккаунт успешно создан!';
+                } else {
+                    document.getElementById('register-message').textContent = data.error;
+                }
+            } catch (error) {
+                document.getElementById('register-message').textContent = 'Ошибка подтверждения кода';
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход в систему</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Вход в систему</h1>
+        <form id="login-form">
+            <input type="email" id="email" placeholder="Email" required><br>
+            <input type="password" id="password" placeholder="Пароль" required><br>
+            <button type="submit">Войти</button>
+        </form>
+        <div id="error-message" class="error"></div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    window.location.href = '/dashboard';
+                } else {
+                    document.getElementById('error-message').textContent = data.error;
+                }
+            } catch (error) {
+                document.getElementById('error-message').textContent = 'Ошибка подключения к серверу';
+            }
+        });
+    </script>
+</body>
+</html> -->

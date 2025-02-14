@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #cart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .cart-item {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: left;
+        }
+
+        .cart-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .cart-item h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+        .cart-item p {
+            margin: 5px 0;
+            font-size: 1em;
+            color: #555;
+        }
+
+        .cart-item .quantity {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .cart-item .quantity input {
+            width: 50px;
+            text-align: center;
+        }
+
+        .cart-item .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .cart-item .buttons .remove-btn {
+            background-color: #ff4c4c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .cart-item .buttons .remove-btn:hover {
+            background-color: #e63939;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            try {
+                const response = await fetch("/api/cart");
+                const data = await response.json();
+                console.log("Cart data received:", data);
+                const cartContainer = document.getElementById("cart-container");
+                cartContainer.innerHTML = "";
+                
+                if (!data.products || data.products.length === 0) {
+                    cartContainer.innerHTML = "<p>No products in the cart.</p>";
+                    return;
+                }
+                
+                data.products.forEach(product => {
+                    console.log("Product data:", product);
+                    if (product.name && typeof product.price === "number" && typeof product.quantity === "number") {
+                        const itemDiv = document.createElement("div");
+                        itemDiv.classList.add("cart-item");
+                        itemDiv.innerHTML = `
+                            <h2>${product.name}</h2>
+                            <p><strong>Price:</strong> $${product.price.toFixed(2)}</p>
+                            <div class="quantity">
+                                <p><strong>Quantity:</strong></p>
+                                <input type="number" min="1" value="${product.quantity}" onchange="updateQuantity('${product.name}', this.value)">
+                            </div>
+                            <div class="buttons">
+                                <button class="remove-btn" onclick="removeItem('${product.name}')">Remove</button>
+                            </div>
+                        `;
+                        cartContainer.appendChild(itemDiv);
+                    } else {
+                        console.error("Invalid product structure", product);
+                    }
+                });
+            } catch (error) {
+                console.error("Error loading cart:", error);
+                document.getElementById("cart-container").innerHTML = "<p>Error loading cart data.</p>";
+            }
+        });
+
+        async function removeItem(name) {
+            try {
+                await fetch('/api/cart/remove', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+                location.reload();
+            } catch (error) {
+                console.error("Error removing item:", error);
+            }
+        }
+
+        async function updateQuantity(name, quantity) {
+            try {
+                await fetch('/api/cart/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, quantity: parseInt(quantity, 10) })
+                });
+                location.reload();
+            } catch (error) {
+                console.error("Error updating quantity:", error);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Shopping Cart</h1>
+    <div id="cart-container"></div>
+</body>
+</html>
