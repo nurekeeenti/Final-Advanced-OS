@@ -26,7 +26,9 @@ This project is a final assignment for the **Advanced Databases (NoSQL)** course
 ### Steps to Run the Project
 1. Clone the repository:
    ```sh
-   git clone (https://github.com/nurekeeenti/Final-Advanced-OS.git
+   git clone https://github.com/nurekeeenti/Final-Advanced-OS.git
+   cd Final-Advanced-OS
+
    ```
 2. Install dependencies:
    ```sh
@@ -39,6 +41,14 @@ This project is a final assignment for the **Advanced Databases (NoSQL)** course
    go run main.go
    ```
 5. Open a browser and visit `http://localhost:8080`
+
+
+## How It Works
+- Users can browse available products.
+- Users can search for products by name.
+- Authenticated users can add items to the cart.
+- The system securely stores user data and shopping carts in MongoDB.
+
 
 ## API Endpoints
 ### Authentication
